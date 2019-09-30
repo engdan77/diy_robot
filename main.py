@@ -16,6 +16,36 @@ o = MyPins(left_eye=22,
            b4=13,
            b5=15)
 
+
+class MyTouchButtons:
+    def __init__(self, pins, sensitivity=600, threshold=0.2):
+        self.pins = pins
+        self.sensitivity = sensitivity
+        self.threshold = threshold
+        self.default = []
+        self.default = self.read()
+
+    def read(self):
+        r = {}
+        for p in self.pins:
+            t = TouchPad(Pin(p))
+            t.config(self.sensitivity)
+            v = t.read()
+            r[p] = v
+        return r
+
+    def get_score(self, reading, default):
+        return abs(1 - reading / default)
+
+    def pressed(self):
+        pins = []
+        for pin, reading, default in zip(self.pins, self.read(), self.default):
+            score = self.get_score(reading, default)
+            if score > self.threshold:
+                pins.append(pin)
+        return pins
+
+
 WIFI_SSID = '***REMOVED***'
 WIFI_PASS = '***REMOVED***'
 
