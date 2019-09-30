@@ -6,7 +6,7 @@ import webrepl
 import network
 from ucollections import namedtuple
 
-MyPins = namedtuple('MyPins', ('left_eye right_eye pir b1 b2 b3 b4 b5'))
+MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4 b5')
 o = MyPins(left_eye=22,
            right_eye=23,
            pir=24,
@@ -19,7 +19,8 @@ o = MyPins(left_eye=22,
 WIFI_SSID = '***REMOVED***'
 WIFI_PASS = '***REMOVED***'
 
-def read_touch(pins=[13, 12, 14, 27, 33, 32, 15, 4], sensitivity=600):
+
+def read_touch(pins=(13, 12, 14, 27, 33, 32, 15, 4), sensitivity=600):
     r = {}
     for p in pins:
         t = TouchPad(Pin(p))
@@ -90,25 +91,22 @@ def wifi_connect(pin_working=22, pin_connected=23):
 
 
 def loop_input():
-    for _ in range(6):
-        light_on(False, pin=[22, 23])
-        utime.sleep(0.5)
-        light_on(True, pin=[22, 23])
-
+    blink([o.left_eye, o.right_eye])
     while True:
         utime.sleep_ms(50)
         b = read_touch()
-        if b[15] < 400:
+        if b[o.b5] < 400:
             blink(times=20, sleep=0.05)
             play_audio(2)
 
 
 def main():
-    light_on(True, pin=[22, 23])
+    light_on(True, pin=[o.left_eye, o.right_eye])
     play_audio(1)
     utime.sleep(5)
     wifi_connect()
     webrepl.start(8266, password='secret')
     loop_input()
+
 
 main()
