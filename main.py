@@ -12,8 +12,8 @@ MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4')
 o = MyPins(left_eye=22,
            right_eye=23,
            pir=21,
-           b2=33,
-           b1=12,
+           b1=33,
+           b2=12,
            b3=13,
            b4=15)
 
@@ -25,8 +25,34 @@ MyVoices = namedtuple('MyVoices', 'welcome '
                                   'bajsoppa '
                                   'today_it_is '
                                   'sunny '
-                                  'cloudy ')
-v = MyVoices(*list(range(1, 10)))
+                                  'cloudy '
+                                  'sleet'
+                                  'fog'
+                                  'thunder'
+                                  'monday'
+                                  'tuesday'
+                                  'wednesday'
+                                  'thursday'
+                                  'friday'
+                                  'saturday'
+                                  'sunday'
+                                  '1'
+                                  '2'
+                                  '3'
+                                  '4'
+                                  '5'
+                                  '6'
+                                  '7'
+                                  '8'
+                                  '9'
+                                  '10'
+                                  '11'
+                                  '12'
+                                  'i_won'
+                                  'you_won'
+                                  'i_am_hot'
+                                  'music')
+v = MyVoices(*list(range(1, 34)))
 
 
 class MyTouchButtons:
@@ -62,14 +88,14 @@ class MyTouchButtons:
         return pins
 
 
-class MyHallSensor:
-    def __init__(self, temp_diff=10):
+class MyTempSensor:
+    def __init__(self, temp_diff=5):
         self.initial = self.read()
         self.triggered = False
         self.temp_diff = temp_diff
 
     def read(self):
-        f = esp32.hall_sensor()
+        f = esp32.raw_temperature()
         c = (f - 32) / 1.8
         return c
 
@@ -174,7 +200,7 @@ def get_weather():
     url = 'https://api.met.no/weatherapi/locationforecast/1.9/?lat=57.8813&lon=13.784'
     filename = 'weather.xml'
     with open(filename, 'w') as f:
-        f.write(requests.get(url).text)
+        f.write(urequests.get(url).text)
     x = xmltok.tokenize(open(filename))
     found = None
     try:
@@ -188,9 +214,9 @@ def get_weather():
     return found.lower()
 
 
-def say_weather():
-    weather_map()
-    println('today is it')
+def say_hour():
+    print('current hour is ...')
+    print(get_hour())
 
 
 def get_weekday():
@@ -219,7 +245,7 @@ def say_weekday():
     print('weekday: {}'.format(audio_map[w]))
 
 
-def say_hour():
+def say_weather():
     print('The time is ...')
     audio_map = {'sun': 1,
                  'rain': 2,
@@ -234,7 +260,7 @@ def say_hour():
 
 
 def motion_detected(pir_pin):
-    p = Pin(pir_pin, Pin.IN)
+    p = Pin(pir_pin, Pin.IN).value()
     # import random
     # p = not bool(random.randrange(0, 100))
     return p
@@ -259,27 +285,38 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
         current_time += 1
     print(current_time)
     if not see_you:
+        for _ in range(10):
+            light_on(True, pin=o.left_eye)
+            light_on(False, pin=o.right_eye)
+            utime.sleep(0.1)
+            light_on(False, pin=o.left_eye)
+            light_on(True, pin=o.right_eye)
+        light_on(False, pin=[o.left_eye, o.right_eye])
         print('I give up! You win..')
     else:
+        blink([o.left_eye, o.right_eye], times=10, sleep=0.01)
+        play_audio(v.i_see_you)
         print('I see you, I win')
 
 
 def loop_input():
-    blink([o.left_eye, o.right_eye])
-    temp = MyHallSensor(5)
+    temp = MyTempSensor(5)
     voice = MyVoice([say_weekday, say_weather, say_hour])
     touch = MyTouchButtons([o.b1, o.b2, o.b3, o.b4])
     while True:
         utime.sleep_ms(20)
         if o.b1 in touch.pressed():
             print('button 1')
-            wifi_connect()
-            voice.talk()
-        if o.b2 in touch.pressed():
-            print('button 2')
+            blink([o.left_eye, o.right_eye])
             print('let us play')
             blink(times=20, sleep=0.01)
             play_hide(o.pir)
+        if o.b3 in touch.pressed():
+            print('button 3')
+            blink([o.left_eye, o.right_eye])
+            play_audio(v.bajsoppa)
+            wifi_connect()
+            voice.talk()
         if o.b4 in touch.pressed():
             print('button 4')
             blink()
@@ -287,12 +324,8 @@ def loop_input():
             utime.sleep(5)
             wifi_connect()
             webrepl.start(8266, password='secret')
-
         if temp.warm():
-            for _ in range(10):
-                light_on(True, period=0.2, pin=o.left_eye)
-                light_on(True, period=0.2, pin=o.right_eye)
-            light_on(True, pin=[o.left_eye, o.right_eye])
+            blink([o.left_eye, o.right_eye], times=20, sleep=0.01)
             print('I am warm')
 
 def main():
