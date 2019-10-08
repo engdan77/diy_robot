@@ -7,6 +7,9 @@ import network
 from ucollections import namedtuple
 import esp32
 import urequests
+import usocket as socket
+import ussl
+import ure
 
 MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4')
 o = MyPins(left_eye=22,
@@ -24,35 +27,44 @@ MyVoices = namedtuple('MyVoices', 'welcome '
                                   'now_stand_still '
                                   'bajsoppa '
                                   'today_it_is '
-                                  'sunny '
-                                  'cloudy '
-                                  'sleet'
-                                  'fog'
-                                  'thunder'
-                                  'monday'
-                                  'tuesday'
-                                  'wednesday'
-                                  'thursday'
-                                  'friday'
-                                  'saturday'
-                                  'sunday'
-                                  '1'
-                                  '2'
-                                  '3'
-                                  '4'
-                                  '5'
-                                  '6'
-                                  '7'
-                                  '8'
-                                  '9'
-                                  '10'
-                                  '11'
-                                  '12'
-                                  'i_won'
-                                  'you_won'
-                                  'i_am_hot'
-                                  'music')
-v = MyVoices(*list(range(1, 34)))
+                                  'sun '
+                                  'cloud '
+                                  'sleet '
+                                  'fog '
+                                  'thunder '
+                                  'monday '
+                                  'tuesday '
+                                  'wednesday '
+                                  'thursday '
+                                  'friday '
+                                  'saturday '
+                                  'sunday '
+                                  '1 '
+                                  '2 '
+                                  '3 '
+                                  '4 '
+                                  '5 '
+                                  '6 '
+                                  '7 '
+                                  '8 '
+                                  '9 '
+                                  '10 '
+                                  '11 '
+                                  '12 '
+                                  '13 '
+                                  '14 '
+                                  '15 '
+                                  '16 '
+                                  '17 '
+                                  '18 '
+                                  '19 '
+                                  '20 '
+                                  'minus '
+                                  'grader '
+                                  'i_won '
+                                  'you_won '
+                                  'i_am_hot ')
+v = MyVoices(*list(range(1, 45)))
 
 
 class MyTouchButtons:
@@ -89,12 +101,18 @@ class MyTouchButtons:
 
 
 class MyTempSensor:
-    def __init__(self, temp_diff=5):
+    def __init__(self, temp_diff=3, sleep_count=50):
         self.initial = self.read()
         self.triggered = False
         self.temp_diff = temp_diff
+        self.current_count = 0
+        self.sleep_count = sleep_count
 
     def read(self):
+        self.current_count += 1
+        if self.current_count >= self.sleep_count:
+            self.current_count = 0
+            self.triggered = False
         f = esp32.raw_temperature()
         c = (f - 32) / 1.8
         return c
@@ -196,27 +214,37 @@ def wifi_connect(pin_working=22, pin_connected=23):
     light_on(True, None, pin_connected)
 
 
-def get_weather():
-    url = 'https://api.met.no/weatherapi/locationforecast/1.9/?lat=57.8813&lon=13.784'
-    filename = 'weather.xml'
-    with open(filename, 'w') as f:
-        f.write(urequests.get(url).text)
-    x = xmltok.tokenize(open(filename))
-    found = None
+def get_weather(host='api.met.no', path='/weatherapi/locationforecast/1.9/?lat=57.8813&lon=13.784', port=443):
     try:
+        s = socket.socket()
+        ai = socket.getaddrinfo(host, port)
+        print("Address infos:", ai)
+        addr = ai[0][-1]
+        print("Connect address:", addr)
+        s.connect(addr)
+        s = ussl.wrap_socket(s, server_hostname=host)
+        s.write(b"GET {} HTTP/1.0\r\nHost: {}\r\n\r\n".format(path, host))
+        result = {}
+
         while True:
-            n = next(x)
-            if 'START_TAG' in n and 'symbol' in n[1]:
-                found = next(x)[-1]
+            l = s.readline()
+            if not l or all([_ in result.keys() for _ in ['weather', 'temp']]):
                 break
-    except StopIteration:
-        pass
-    return found.lower()
+            if 'symbol id' in l:
+                result['weather'] = ure.search(r'symbol id="(\w+)"', l).group(1).lower()
+            if 'temperature' in l:
+                result['temp'] = ure.search(r'value="(\d+)', l).group(1)
+        s.close()
+    except Exception as e:
+        print(e)
+    return result
 
 
 def say_hour():
     print('current hour is ...')
-    print(get_hour())
+    hour = get_hour()
+    print(hour)
+    play_audio(getattr(v, hour))
 
 
 def get_weekday():
@@ -234,29 +262,18 @@ def get_hour():
 
 def say_weekday():
     print('Current day is...')
-    audio_map = {'monday': 1,
-                 'tuesday': 2,
-                 'wednesday': 3,
-                 'thursday': 4,
-                 'friday': 5,
-                 'saturday': 6,
-                 'sunday': 7}
     w = get_weekday()
-    print('weekday: {}'.format(audio_map[w]))
+    print('weekday: {}'.format(w))
+    play_audio(v.today_it_is)
+    play_audio(getattr(v, w))
 
 
 def say_weather():
     print('The time is ...')
-    audio_map = {'sun': 1,
-                 'rain': 2,
-                 'snow': 3,
-                 'sleet': 4,
-                 'fog': 5,
-                 'thunder': 6}
     current_weather = get_weather()
-    for k, v in audio_map.items():
-        if current_weather in k:
-            print('weather: {}'.format(v))
+    print(current_weather)
+    play_audio(v.today_it_is)
+    play_audio(getattr(v, current_weather))
 
 
 def motion_detected(pir_pin):
@@ -273,12 +290,15 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
     current_time = 0
     see_you = False
 
-    utime.sleep(3)
+    for i in ['3', '2', '1']:
+        play_audio(getattr(v, i))
+
     play_audio(v.now_stand_still)
     while current_time <= max_times and not see_you:
         if see_you:
             print('I see you !!')
             play_audio(v.i_see_you)
+            play_audio(v.i_won)
             break
         utime.sleep_ms(interval_ms)
         see_you = motion_detected(pir_pin)
@@ -293,9 +313,11 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
             light_on(True, pin=o.right_eye)
         light_on(False, pin=[o.left_eye, o.right_eye])
         print('I give up! You win..')
+        play_audio(v.you_won)
     else:
         blink([o.left_eye, o.right_eye], times=10, sleep=0.01)
         play_audio(v.i_see_you)
+        play_audio(v.i_won)
         print('I see you, I win')
 
 
@@ -327,6 +349,7 @@ def loop_input():
         if temp.warm():
             blink([o.left_eye, o.right_eye], times=20, sleep=0.01)
             print('I am warm')
+            play_audio(v.i_am_hot)
 
 def main():
     play_audio(1)
