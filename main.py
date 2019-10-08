@@ -323,24 +323,35 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
 
 def loop_input():
     temp = MyTempSensor(5)
-    voice = MyVoice([say_weekday, say_weather, say_hour])
+    b2_voice = MyVoice([say_weekday, say_hour])
     touch = MyTouchButtons([o.b1, o.b2, o.b3, o.b4])
     while True:
         utime.sleep_ms(20)
         if o.b1 in touch.pressed():
             print('button 1')
+            play_audio(getattr(v, '1'))
             blink([o.left_eye, o.right_eye])
             print('let us play')
             blink(times=20, sleep=0.01)
             play_hide(o.pir)
+        if o.b2 in touch.pressed():
+            print('button 2')
+            play_audio(getattr(v, '2'))
+            blink([o.left_eye, o.right_eye])
+            wifi_connect()
+            b2_voice.talk()
         if o.b3 in touch.pressed():
             print('button 3')
+            play_audio(getattr(v, '3'))
             blink([o.left_eye, o.right_eye])
-            play_audio(v.bajsoppa)
-            wifi_connect()
-            voice.talk()
+            say_weather()
         if o.b4 in touch.pressed():
             print('button 4')
+            play_audio(getattr(v, '4'))
+            blink([o.left_eye, o.right_eye])
+            play_audio(v.bajsoppa)
+        if all([_ in touch.pressed() for _ in [o.b3, o.b4]]):
+            print('button 3 and 4')
             blink()
             light_on(False, pin=[o.left_eye, o.right_eye])
             utime.sleep(5)
