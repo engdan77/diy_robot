@@ -102,11 +102,11 @@ class MyTouchButtons:
 
 class MyTempSensor:
     def __init__(self, temp_diff=3, sleep_count=50):
-        self.initial = self.read()
+        self.current_count = 0
         self.triggered = False
         self.temp_diff = temp_diff
-        self.current_count = 0
         self.sleep_count = sleep_count
+        self.initial = self.read()
 
     def read(self):
         self.current_count += 1
@@ -215,6 +215,7 @@ def wifi_connect(pin_working=22, pin_connected=23):
 
 
 def get_weather(host='api.met.no', path='/weatherapi/locationforecast/1.9/?lat=57.8813&lon=13.784', port=443):
+    result = {}
     try:
         s = socket.socket()
         ai = socket.getaddrinfo(host, port)
@@ -224,8 +225,6 @@ def get_weather(host='api.met.no', path='/weatherapi/locationforecast/1.9/?lat=5
         s.connect(addr)
         s = ussl.wrap_socket(s, server_hostname=host)
         s.write(b"GET {} HTTP/1.0\r\nHost: {}\r\n\r\n".format(path, host))
-        result = {}
-
         while True:
             l = s.readline()
             if not l or all([_ in result.keys() for _ in ['weather', 'temp']]):
@@ -269,11 +268,13 @@ def say_weekday():
 
 
 def say_weather():
-    print('The time is ...')
+    print('The weather is ...')
     current_weather = get_weather()
     print(current_weather)
     play_audio(v.today_it_is)
-    play_audio(getattr(v, current_weather))
+    play_audio(getattr(v, current_weather['weather'].decode()))
+    current_temp = current_weather['temp'].decode()
+    print(current_temp)
 
 
 def motion_detected(pir_pin):
@@ -342,6 +343,7 @@ def loop_input():
             b2_voice.talk()
         if o.b3 in touch.pressed():
             print('button 3')
+            wifi_connect()
             play_audio(getattr(v, '3'))
             blink([o.left_eye, o.right_eye])
             say_weather()
@@ -366,4 +368,4 @@ def main():
     play_audio(1)
     loop_input()
 
-main()
+# main()
