@@ -267,14 +267,26 @@ def say_weekday():
     play_audio(getattr(v, w))
 
 
+def simplify_weather_words(input_word):
+    output = input_word.decode()
+    for remove_word in ['partly',]:
+        output = output.replace(remove_word, '')
+    return output
+
+
 def say_weather():
     print('The weather is ...')
     current_weather = get_weather()
     print(current_weather)
     play_audio(v.today_it_is)
-    play_audio(getattr(v, current_weather['weather'].decode()))
+    weather = simplify_weather_words(current_weather['weather'])
+    print('weather: {}'.format(weather))
+    play_audio(getattr(v, weather))
     current_temp = current_weather['temp'].decode()
-    print(current_temp)
+    play_audio(v.today_it_is)
+    print('current temp: {}'.format(current_temp))
+    play_audio(getattr(v, current_temp))
+    play_audio(v.grader)
 
 
 def motion_detected(pir_pin):
@@ -368,4 +380,4 @@ def main():
     play_audio(1)
     loop_input()
 
-# main()
+main()
