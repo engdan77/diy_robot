@@ -29,6 +29,8 @@ MyVoices = namedtuple('MyVoices', 'welcome '
                                   'today_it_is '
                                   'sun '
                                   'cloud '
+                                  'rain '
+                                  'snow '
                                   'sleet '
                                   'fog '
                                   'thunder '
@@ -39,32 +41,35 @@ MyVoices = namedtuple('MyVoices', 'welcome '
                                   'friday '
                                   'saturday '
                                   'sunday '
-                                  '1 '
-                                  '2 '
-                                  '3 '
-                                  '4 '
-                                  '5 '
-                                  '6 '
-                                  '7 '
-                                  '8 '
-                                  '9 '
-                                  '10 '
-                                  '11 '
-                                  '12 '
-                                  '13 '
-                                  '14 '
-                                  '15 '
-                                  '16 '
-                                  '17 '
-                                  '18 '
-                                  '19 '
-                                  '20 '
+                                  'one '
+                                  'two '
+                                  'three '
+                                  'four '
+                                  'five '
+                                  'six '
+                                  'seven '
+                                  'eight '
+                                  'nine '
+                                  'ten '
+                                  'eleven '
+                                  'twelve '
+                                  'thirteen '
+                                  'fourteen '
+                                  'fifteen '
+                                  'sixteen '
+                                  'seventeen '
+                                  'eighteen '
+                                  'nineteen '
+                                  'twenty '
                                   'minus '
                                   'grader '
                                   'i_won '
                                   'you_won '
-                                  'i_am_hot ')
-v = MyVoices(*list(range(1, 45)))
+                                  'i_am_hot '
+                                  'clock_is '
+                                  'knapp '
+                                  'shutdown')
+v = MyVoices(*list(range(1, 50)))
 
 
 class MyTouchButtons:
@@ -243,7 +248,7 @@ def say_hour():
     print('current hour is ...')
     hour = get_hour()
     print(hour)
-    play_audio(getattr(v, hour))
+    play_audio(getattr(v, find_word_in_voices(hour, v)))
 
 
 def get_weekday():
@@ -267,11 +272,45 @@ def say_weekday():
     play_audio(getattr(v, w))
 
 
-def simplify_weather_words(input_word):
-    output = input_word.decode()
-    for remove_word in ['partly',]:
-        output = output.replace(remove_word, '')
-    return output
+def digit_to_word(input_digit):
+    if type(input_digit) is bytes:
+        input_digit = input_digit.decode()
+    m = {'1': 'one',
+         '2': 'two',
+         '3': 'three',
+         '4': 'four',
+         '5': 'five',
+         '6': 'six',
+         '7': 'seven',
+         '8': 'eight',
+         '9': 'nine',
+         '10': 'ten',
+         '11': 'eleven',
+         '12': 'twelve',
+         '13': 'thirteen',
+         '14': 'fourteen',
+         '15': 'fifteen',
+         '16': 'sixteen',
+         '17': 'seventeen',
+         '18': 'eighteen',
+         '19': 'nineteen',
+         '20': 'twenty'}
+    return m[input_digit] if input_digit in m.keys() else None
+
+
+def find_word_in_voices(input_word, voice_named_tuple):
+    if type(input_word) is bytes:
+        input_word = input_word.decode()
+    digit = digit_to_word(input_word)
+    if digit:
+        input_word = digit
+    fields_kv = str(voice_named_tuple).replace('MyVoices(', '').replace(')', '').split()
+    fields = []
+    for kv in fields_kv:
+        fields.append(kv.split('=')[0])
+    for w in fields:
+        if w in input_word:
+            return w
 
 
 def say_weather():
@@ -279,13 +318,13 @@ def say_weather():
     current_weather = get_weather()
     print(current_weather)
     play_audio(v.today_it_is)
-    weather = simplify_weather_words(current_weather['weather'])
+    weather = find_word_in_voices(current_weather['weather'], v)
     print('weather: {}'.format(weather))
     play_audio(getattr(v, weather))
     current_temp = current_weather['temp'].decode()
     play_audio(v.today_it_is)
     print('current temp: {}'.format(current_temp))
-    play_audio(getattr(v, current_temp))
+    play_audio(getattr(v, find_word_in_voices(current_temp, v)))
     play_audio(v.grader)
 
 
@@ -303,7 +342,7 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
     current_time = 0
     see_you = False
 
-    for i in ['3', '2', '1']:
+    for i in ['three', 'two', 'one']:
         play_audio(getattr(v, i))
 
     play_audio(v.now_stand_still)
@@ -342,26 +381,26 @@ def loop_input():
         utime.sleep_ms(20)
         if o.b1 in touch.pressed():
             print('button 1')
-            play_audio(getattr(v, '1'))
+            play_audio(getattr(v, 'one'))
             blink([o.left_eye, o.right_eye])
             print('let us play')
             blink(times=20, sleep=0.01)
             play_hide(o.pir)
         if o.b2 in touch.pressed():
             print('button 2')
-            play_audio(getattr(v, '2'))
+            play_audio(getattr(v, 'two'))
             blink([o.left_eye, o.right_eye])
             wifi_connect()
             b2_voice.talk()
         if o.b3 in touch.pressed():
             print('button 3')
             wifi_connect()
-            play_audio(getattr(v, '3'))
+            play_audio(getattr(v, 'three'))
             blink([o.left_eye, o.right_eye])
             say_weather()
         if o.b4 in touch.pressed():
             print('button 4')
-            play_audio(getattr(v, '4'))
+            play_audio(getattr(v, 'four'))
             blink([o.left_eye, o.right_eye])
             play_audio(v.bajsoppa)
         if all([_ in touch.pressed() for _ in [o.b3, o.b4]]):
