@@ -395,33 +395,42 @@ def loop_input():
     b2_voice = MyVoice([say_weekday, say_hour])
     touch = MyTouchButtons([o.b1, o.b2, o.b3, o.b4])
     while counter < sleep_after:
+        counter += 1
         utime.sleep_ms(20)
+        left_eye = machine.Pin(o.left_eye, machine.Pin.OUT)
+        right_eye = machine.Pin(o.right_eye, machine.Pin.OUT)
+        light_on(not left_eye, pin=o.left_eye)
+        light_on(not right_eye, pin=o.right_eye)
         if o.b1 in touch.pressed():
             print('button 1')
-            play_audio(v.button)
-            play_audio(getattr(v, 'one'))
+            # play_audio(v.button)
+            # play_audio(getattr(v, 'one'))
             blink([o.left_eye, o.right_eye])
             print('let us play')
             blink(times=20, sleep=0.01)
             play_hide(o.pir)
+            counter = 0
         if o.b2 in touch.pressed():
             print('button 2')
-            play_audio(v.button)
-            play_audio(getattr(v, 'two'))
+            # play_audio(v.button)
+            # play_audio(getattr(v, 'two'))
             blink([o.left_eye, o.right_eye])
             wifi_connect()
             b2_voice.talk()
+            counter = 0
         if o.b3 in touch.pressed():
             print('button 3')
-            play_audio(v.button)
-            play_audio(getattr(v, 'three'))
+            # play_audio(v.button)
+            # play_audio(getattr(v, 'three'))
             wifi_connect()
             blink([o.left_eye, o.right_eye])
             say_weather()
+            counter = 0
         if o.b4 in touch.pressed():
             print('button 4')
-            play_audio(v.button)
-            play_audio(getattr(v, 'four'))
+            print(counter)
+            # play_audio(v.button)
+            # play_audio(getattr(v, 'four'))
             blink([o.left_eye, o.right_eye])
             play_audio(v.bajsoppa)
         if all([_ in touch.pressed() for _ in [o.b3, o.b4]]):
@@ -431,6 +440,7 @@ def loop_input():
             utime.sleep(5)
             wifi_connect()
             webrepl.start(8266, password='secret')
+            sleep_after = sleep_after * 10
         if temp.warm():
             blink([o.left_eye, o.right_eye], times=20, sleep=0.01)
             print('I am warm')
