@@ -67,7 +67,7 @@ MyVoices = namedtuple('MyVoices', 'welcome '
                                   'you_won '
                                   'i_am_hot '
                                   'clock_is '
-                                  'knapp '
+                                  'button '
                                   'shutdown')
 v = MyVoices(*list(range(1, 50)))
 
@@ -248,6 +248,7 @@ def say_hour():
     print('current hour is ...')
     hour = get_hour()
     print(hour)
+    play_audio(v.clock_is)
     play_audio(getattr(v, find_word_in_voices(hour, v)))
 
 
@@ -324,7 +325,12 @@ def say_weather():
     current_temp = current_weather['temp'].decode()
     play_audio(v.today_it_is)
     print('current temp: {}'.format(current_temp))
-    play_audio(getattr(v, find_word_in_voices(current_temp, v)))
+    if current_temp is not None and 21 <= int(current_temp) <= 29:
+        play_audio(v.twenty)
+        last_digit = current_temp[-1]
+        play_audio(getattr(v, find_word_in_voices(last_digit, v)))
+    else:
+        play_audio(getattr(v, find_word_in_voices(current_temp, v)))
     play_audio(v.grader)
 
 
@@ -373,14 +379,26 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
         print('I see you, I win')
 
 
+def sleep_robot():
+    import esp32
+    wake_pins = [Pin(p, mode=Pin.IN, pull=Pin.PULL_DOWN) for p in [o.b1, o.b2, o.b3, o.b4]]
+    esp32.wake_on_ext1(pins=wake_pins, level=Pin.WAKE_HIGH)
+    play_audio(v.shutdown)
+    print('Time is up. Going to sleep')
+    machine.deepsleep()
+
+
 def loop_input():
+    counter = 0
+    sleep_after = 3000  # one minute
     temp = MyTempSensor(5)
     b2_voice = MyVoice([say_weekday, say_hour])
     touch = MyTouchButtons([o.b1, o.b2, o.b3, o.b4])
-    while True:
+    while counter < sleep_after:
         utime.sleep_ms(20)
         if o.b1 in touch.pressed():
             print('button 1')
+            play_audio(v.button)
             play_audio(getattr(v, 'one'))
             blink([o.left_eye, o.right_eye])
             print('let us play')
@@ -388,18 +406,21 @@ def loop_input():
             play_hide(o.pir)
         if o.b2 in touch.pressed():
             print('button 2')
+            play_audio(v.button)
             play_audio(getattr(v, 'two'))
             blink([o.left_eye, o.right_eye])
             wifi_connect()
             b2_voice.talk()
         if o.b3 in touch.pressed():
             print('button 3')
-            wifi_connect()
+            play_audio(v.button)
             play_audio(getattr(v, 'three'))
+            wifi_connect()
             blink([o.left_eye, o.right_eye])
             say_weather()
         if o.b4 in touch.pressed():
             print('button 4')
+            play_audio(v.button)
             play_audio(getattr(v, 'four'))
             blink([o.left_eye, o.right_eye])
             play_audio(v.bajsoppa)
@@ -414,6 +435,8 @@ def loop_input():
             blink([o.left_eye, o.right_eye], times=20, sleep=0.01)
             print('I am warm')
             play_audio(v.i_am_hot)
+    sleep_robot()
+
 
 def main():
     play_audio(1)
