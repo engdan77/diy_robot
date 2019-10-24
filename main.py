@@ -381,10 +381,10 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
 
 
 def sleep_robot():
-    wake_pins = [Pin(p, mode=Pin.IN, pull=Pin.PULL_DOWN) for p in [o.b1, o.b2, o.b3, o.b4]]
-    esp32.wake_on_ext1(pins=wake_pins, level=Pin.WAKE_HIGH)
-    play_audio(v.shutdown)
     print('Time is up. Going to sleep')
+    play_audio(v.shutdown)
+    utime.sleep(5)
+    esp32.wake_on_touch(True)
     machine.deepsleep()
 
 
