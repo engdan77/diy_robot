@@ -10,6 +10,7 @@ import urequests
 import usocket as socket
 import ussl
 import ure
+import esp32
 
 MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4')
 o = MyPins(left_eye=22,
@@ -380,7 +381,6 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
 
 
 def sleep_robot():
-    import esp32
     wake_pins = [Pin(p, mode=Pin.IN, pull=Pin.PULL_DOWN) for p in [o.b1, o.b2, o.b3, o.b4]]
     esp32.wake_on_ext1(pins=wake_pins, level=Pin.WAKE_HIGH)
     play_audio(v.shutdown)
