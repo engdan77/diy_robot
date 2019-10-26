@@ -12,6 +12,12 @@ import ussl
 import ure
 import esp32
 
+# Configure your wifi
+
+WIFI_SSID = 'xxxx'
+WIFI_PASS = 'xxxx'
+
+# GPIO vs function mapping
 MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4')
 o = MyPins(left_eye=22,
            right_eye=23,
@@ -21,6 +27,7 @@ o = MyPins(left_eye=22,
            b3=13,
            b4=15)
 
+# Slot in JQ6500 vs voice prompt mapping
 MyVoices = namedtuple('MyVoices', 'welcome '
                                   'i_see_you '
                                   'now_we_play '
@@ -144,10 +151,6 @@ class MyVoice:
             self.current = 0
         else:
             self.current += 1
-
-
-WIFI_SSID = '***REMOVED***'
-WIFI_PASS = '***REMOVED***'
 
 
 def read_touch(pins=(13, 12, 14, 27, 33, 32, 15, 4), sensitivity=600):
@@ -382,6 +385,7 @@ def play_hide(pir_pin, max_secs=30, interval_ms=20):
 
 def sleep_robot():
     print('Time is up. Going to sleep')
+    light_on(not Pin(o.right_eye).value(), None, pin=o.right_eye)
     play_audio(v.shutdown)
     utime.sleep(5)
     esp32.wake_on_touch(True)
@@ -389,18 +393,20 @@ def sleep_robot():
 
 
 def loop_input():
+    utime.sleep(2)
     counter = 0
-    sleep_after = 3000  # one minute
+    sleep_after = 60  # one minute
     temp = MyTempSensor(5)
     b2_voice = MyVoice([say_weekday, say_hour])
     touch = MyTouchButtons([o.b1, o.b2, o.b3, o.b4])
-    while counter < sleep_after:
+    while True:
         counter += 1
+        if '0' in str(counter):
+            print('current timer: {}'.format(counter))
+        if counter >= sleep_after:
+            break
         utime.sleep_ms(20)
-        left_eye = machine.Pin(o.left_eye, machine.Pin.OUT)
-        right_eye = machine.Pin(o.right_eye, machine.Pin.OUT)
-        light_on(not left_eye, pin=o.left_eye)
-        light_on(not right_eye, pin=o.right_eye)
+        light_on(not Pin(o.right_eye).value(), None, pin=o.right_eye)
         if o.b1 in touch.pressed():
             print('button 1')
             # play_audio(v.button)
@@ -451,5 +457,6 @@ def loop_input():
 def main():
     play_audio(1)
     loop_input()
+
 
 main()
