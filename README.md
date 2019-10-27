@@ -39,10 +39,19 @@ implementation optimized to run on microcontrollers.
 
 ### How to configure and upload the software
 
-1) Follow [these](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) instructions to upload MicroPython to your ESP32
+- Follow [these](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) instructions to upload MicroPython to your ESP32
 
-2) 
+- Update the following lines in main.py
+```python
+# Configure your wifi
 
+WIFI_SSID = 'xxxx'
+WIFI_PASS = 'xxxx'
+```
 
+- Upload the following files to the ESP32 flash using e.g. ampy described better [here](https://boneskull.com/micropython-on-esp32-part-1/).
+    - jq6500.py
+    - main.py
+    
 
 ### The final result
