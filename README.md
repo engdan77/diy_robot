@@ -53,5 +53,9 @@ WIFI_PASS = 'xxxx'
     - jq6500.py
     - main.py
     
+### Upload voice prompts
+
+Connect the jq6500 module to available USB and it will open a "downloader" (on Windows) and you can then
+upload all prompts found in the **voice_prompts** folder. More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/index.html).
 
 ### The final result
