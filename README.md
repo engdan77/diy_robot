@@ -10,7 +10,7 @@ that might be fun and share for inspiration :smirk:
 While my daughter have her boxes with toys so did luckily her dad .. so was just a matter start using the soldering iron ..
 I'll explain below what items were needed and how to glue these together, 
 if you feel uncomfortable soldering you may instead purchase a [breadboard](https://www.aliexpress.com/item/1893684840.html) instead.
-The cost for such project shouldn't have to cost more than a 10 euros which is not too shabby for a talking robot :money_with_wings:
+The cost for such project shouldn't have to cost more than a 10 euros which I personally is not too shabby for a talking/seeing wifi-connected robot :money_with_wings: :yum:
 
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)
 implementation optimized to run on microcontrollers. 
