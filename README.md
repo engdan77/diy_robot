@@ -42,6 +42,7 @@ implementation optimized to run on microcontrollers.
 - Follow [these](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) instructions to upload MicroPython to your ESP32
 
 - Update the following lines in main.py
+
 ```python
 # Configure your wifi
 
