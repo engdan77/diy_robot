@@ -52,7 +52,8 @@ WIFI_PASS = 'xxxx'
 - Upload the following files to the ESP32 flash using e.g. ampy described better [here](https://boneskull.com/micropython-on-esp32-part-1/).
     - jq6500.py
     - main.py
-    
+
+
 ### Upload voice prompts
 
 Connect the jq6500 module to available USB and it will open a "downloader" (on Windows) and you can then
