@@ -10,7 +10,7 @@ that might be fun and share for inspiration :smirk:
 While my daughter have her boxes with toys so did luckily her dad .. so was just a matter start using the soldering iron ..
 I'll explain below what items were needed and how to glue these together, 
 if you feel uncomfortable soldering you may instead purchase a [breadboard](https://www.aliexpress.com/item/1893684840.html) instead.
-The cost for such project shouldn't have to cost more than a tiny 10 euros.
+The cost for such project shouldn't have to cost more than a 10 euros which is not too shabby for a talking robot :money_with_wings:
 
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)
 implementation optimized to run on microcontrollers. 
@@ -58,6 +58,17 @@ WIFI_PASS = 'xxxx'
 ### Upload voice prompts
 
 Connect the jq6500 module to available USB and it will open a "downloader" (on Windows) and you can then
-upload all prompts found in the **voice_prompts** folder. More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/index.html).
+upload all prompts found in the "voice_prompts" folder, I'd suggest you replace these with your own _(unless you'd like to keep these in Swedish)_ and you'd pretty much find what being said in the code
+
+```python
+# Slot in JQ6500 vs voice prompt mapping
+MyVoices = namedtuple('MyVoices', 'welcome '
+                                  'i_see_you '
+                                  'now_we_play '
+                                  'instruct_hide '
+                                  'now_stand_still .....')
+# and so on
+```
+More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/index.html).
 
 ### The final result
