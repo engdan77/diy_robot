@@ -14,7 +14,7 @@ The cost for such project shouldn't have to cost more than a 10 euros which I pe
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)
 implementation optimized to run on microcontrollers. 
 
-[Gyro gearloose](https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv)
+![Gyro gearloose](https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv){:height="25%" width="25%"}
 
 ### How does the robot work?
 Thanks to ESP32 capacitive touch GPIOs we can pull a wire to e.g. a screw/coin that is able to sense touches instead of using mechanical buttons.
