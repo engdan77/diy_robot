@@ -1,7 +1,6 @@
-# DIY Wilma Robot
+# DIY Robot
 
 ### Background
-
 After building some construction on the garden my 4 year old daughter and I built a small robot of some spare wood planks :hammer: 
 I've tried to explain to her that daddy builds robots at his work ... perhaps not entirely accurate though :grin:
 So quite naturally thinking we'll need to give this robot a brain :bulb: .. this might be a fun [DIY](https://en.wikipedia.org/wiki/Do_it_yourself) (Do It Yourself) project
@@ -15,7 +14,33 @@ The cost for such project shouldn't have to cost more than a 10 euros which I pe
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)
 implementation optimized to run on microcontrollers. 
 
-### Material list
+[Gyro gearloose](https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv)
+
+### How does the robot work?
+Thanks to ESP32 capacitive touch GPIOs we can pull a wire to e.g. a screw/coin that is able to sense touches instead of using mechanical buttons.
+We have the following buttons that tells the robot the following
+
+- Button 1 - play hide'n seek
+    - The robot will ask you to stand in the middle of the room and will challenge you to be as still as you can for 30 seconds.
+    If the robot find your movement it wins otherwise you will..
+- Button 2 - tell time and day
+    - The robot establishes connection to Wifi and connects to WorldClock API cycling between saying what day it is or what hour of the day it is (CET)... I thought of introducing "it is bedtime for you now".
+- Button 3 - tell what weather it is outside
+    - The robots use Wifi and connects to api.met.no to determine the weather based on the WEATHERLOCATION defined and reads wether is sun, rain, cloud, thunder and so on.
+- Button 4 - reads out the magic word
+    - "poop"
+- Button 3 + 4 simultaneous - wifi and webrepl
+    - If you like to have the robot connect to your wifi and enable [webrepl](https://docs.micropython.org/en/latest/esp8266/tutorial/repl.html) that allows you to e.g. interactively control the robot and upload/download files.
+      
+
+### The final result
+...
+
+
+### Make your own robot
+...
+
+#### Material list
 
 | ﻿Item                    	| appr. Cost (EUR) 	| URL to item                                        	|
 |-------------------------	|------------------	|----------------------------------------------------	|
@@ -30,14 +55,14 @@ implementation optimized to run on microcontrollers.
 | 2 pcs green leds        	| 0,2              	| https://www.aliexpress.com/item/32999447594.html   	|
 | 2 pcs 200 ohm resistors 	| 0,2              	| https://www.aliexpress.com/item/32868810758.html   	|
 | PCB board               	| 0,2              	| https://www.aliexpress.com/item/32961983574.html   	|
-| spare woods and nails   	| for free?        	|                                                    	|
+| spare wood, nails/screws  | for free(?)       |                                                    	|
 |                         	|                  	|                                                    	|
 | Total cost              	| 9                	|                                                    	|
 
-### How to wire the components
+#### How to wire the components
 
 
-### How to configure and upload the software
+#### How to configure and upload the software
 
 - Follow [these](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) instructions to upload MicroPython to your ESP32
 
@@ -48,6 +73,9 @@ implementation optimized to run on microcontrollers.
 
 WIFI_SSID = 'xxxx'
 WIFI_PASS = 'xxxx'
+
+# Used to tell what the weather it is
+WEATHERLOCATION = 'lat=57.8813&lon=13.784'
 ```
 
 - Upload the following files to the ESP32 flash using e.g. ampy described better [here](https://boneskull.com/micropython-on-esp32-part-1/).
@@ -55,10 +83,10 @@ WIFI_PASS = 'xxxx'
     - main.py
 
 
-### Upload voice prompts
+#### Upload voice prompts
 
 Connect the jq6500 module to available USB and it will open a "downloader" (on Windows) and you can then
-upload all prompts found in the "voice_prompts" folder, I'd suggest you replace these with your own _(unless you'd like to keep these in Swedish)_ and you'd pretty much find what being said in the code
+upload all prompts found in the "voice_prompts" folder, I'd suggest you come up with your own voice prompts unless you'd like to keep these swedish ones and you'd pretty much find what being said in the code
 
 ```python
 # Slot in JQ6500 vs voice prompt mapping
@@ -71,4 +99,4 @@ MyVoices = namedtuple('MyVoices', 'welcome '
 ```
 More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/index.html).
 
-### The final result
+
