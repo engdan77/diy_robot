@@ -1,5 +1,7 @@
 # DIY Robot
 
+<img src="https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv" width="80">
+
 ### Background
 After building some construction on the garden my 4 year old daughter and I built a small robot of some spare wood planks :hammer: 
 I've tried to explain to her that daddy builds robots at his work ... perhaps not entirely accurate though :grin:
@@ -13,8 +15,6 @@ The cost for such project shouldn't have to cost more than a 10 euros which I pe
 
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)
 implementation optimized to run on microcontrollers. 
-
-![Gyro gearloose](https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv){:height="25%" width="25%"}
 
 ### How does the robot work?
 Thanks to ESP32 capacitive touch GPIOs we can pull a wire to e.g. a screw/coin that is able to sense touches instead of using mechanical buttons.
