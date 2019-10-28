@@ -20,16 +20,16 @@ implementation optimized to run on microcontrollers.
 Thanks to ESP32 capacitive touch GPIOs we can pull a wire to e.g. a screw/coin that is able to sense touches instead of using mechanical buttons.
 We have the following buttons that tells the robot the following
 
-- Button 1 - play hide'n seek
+- **Button 1 - play hide'n seek**
     - The robot will ask you to stand in the middle of the room and will challenge you to be as still as you can for 30 seconds.
     If the robot find your movement it wins otherwise you will..
-- Button 2 - tell time and day
+- **Button 2 - tell time and day**
     - The robot establishes connection to Wifi and connects to WorldClock API cycling between saying what day it is or what hour of the day it is (CET)... I thought of introducing "it is bedtime for you now".
-- Button 3 - tell what weather it is outside
+- **Button 3 - tell what weather it is outside**
     - The robots use Wifi and connects to api.met.no to determine the weather based on the WEATHERLOCATION defined and reads wether is sun, rain, cloud, thunder and so on.
-- Button 4 - reads out the magic word
+- **Button 4 - reads out the magic word**
     - "poop"
-- Button 3 + 4 simultaneous - wifi and webrepl
+- **Button 3 + 4 simultaneous - wifi and webrepl**
     - If you like to have the robot connect to your wifi and enable [webrepl](https://docs.micropython.org/en/latest/esp8266/tutorial/repl.html) that allows you to e.g. interactively control the robot and upload/download files.
       
 
