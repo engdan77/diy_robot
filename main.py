@@ -17,6 +17,9 @@ import esp32
 WIFI_SSID = 'xxxx'
 WIFI_PASS = 'xxxx'
 
+# Used to tell what the weather it is
+WEATHERLOCATION = 'lat=57.8813&lon=13.784'
+
 # GPIO vs function mapping
 MyPins = namedtuple('MyPins', 'left_eye right_eye pir b1 b2 b3 b4')
 o = MyPins(left_eye=22,
@@ -223,7 +226,7 @@ def wifi_connect(pin_working=22, pin_connected=23):
     light_on(True, None, pin_connected)
 
 
-def get_weather(host='api.met.no', path='/weatherapi/locationforecast/1.9/?lat=57.8813&lon=13.784', port=443):
+def get_weather(host='api.met.no', path='/weatherapi/locationforecast/1.9/?{}'.format(WEATHERLOCATION), port=443):
     result = {}
     try:
         s = socket.socket()
