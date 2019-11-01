@@ -34,8 +34,10 @@ We have the following buttons that tells the robot the following
       
 
 ### The final result
-You can check out this video to see what the result might look like..
+
 <a href="https://www.youtube.com/watch?v=Bjfdz-HMM34&cc_lang_pref=en"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/play.png" width="300"></a>
+
+You can check out this video to see what the result might look like..
 
 
 ### Make your own robot
@@ -61,8 +63,11 @@ You can check out this video to see what the result might look like..
 | Total cost              	| 9                	|                                                    	|
 
 #### How to wire the components
+
+<a href="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png" width="600"></a>
+
 You have the sketch and wiring found under the docs directory..
-<a href="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png">"<img src="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png" width="600"></a>
+
 
 #### How to configure and upload the software
 
