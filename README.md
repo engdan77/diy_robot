@@ -35,7 +35,7 @@ We have the following buttons that tells the robot the following
 
 ### The final result
 
-<a href="https://www.youtube.com/watch?v=Bjfdz-HMM34&cc_lang_pref=en"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/play.png" width="300"></a>
+<a href="https://www.youtube.com/watch?v=Bjfdz-HMM34&cc_lang_pref=en"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/play.png" width="500"></a>
 
 You can check out this video to see what the result might look like..
 
