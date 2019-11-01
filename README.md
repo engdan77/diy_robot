@@ -117,5 +117,4 @@ More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/in
 
 #### So what's next ... <a name="WhatNext"></a>
 
-Well .. obviously a few minutes after introducing this to her she says "Dad ... when will it have arms and legs being able to clean my room ?!?!"
-So turns out we have some work ahead of us, already begin thinking of hydraulics and how to embed this to its GPIOs :sweat_smile:
+Well .. obviously a few minutes after introducing this to her she says _"Dad ... when will it have arms and legs being able to clean my room ?!?!"_ So turns out we have some work ahead of us, already begin thinking of hydraulics and how to embed this to its GPIOs :sweat_smile:
