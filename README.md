@@ -1,8 +1,18 @@
 # DIY Robot
 
+# Table of contents
+1. [Background](#Background)
+2. [How does the robot work?](#HowWork)
+3. [Make your own robot](#MakeYourOwn)
+    1. [Material list](#MaterialList)
+    2. [How to wire the components](#HowToWire)
+    3. [How to configure and upload the software](#HowToUpload)
+    4. [Upload voice prompts](#UploadPrompts)
+4. [So what's next](#WhatNext)
+
 <img src="https://vignette.wikia.nocookie.net/kalleankasverige/images/7/73/Oppfinnar-Jocke.gif/revision/latest?cb=20130720090538&path-prefix=sv" width="80">
 
-### Background
+### Background <a name="Background"></a>
 After building some construction on the garden my 4 year old daughter and I built a small robot of some spare wood planks :hammer: 
 I've tried to explain to her that daddy builds robots at his work ... perhaps not entirely accurate though :grin:
 So quite naturally thinking we'll need to give this robot a brain :bulb: .. this might be a fun [DIY](https://en.wikipedia.org/wiki/Do_it_yourself) (Do It Yourself) project
@@ -15,7 +25,7 @@ The cost for such project shouldn't have to cost more than a 10 euros which I pe
 
 And finally I'll have written some MicroPython :snake: for those who doesn't know is a [Python](https://en.wikipedia.org/wiki/Python_%28programming_language%29) implementation optimized to run on microcontrollers. 
 
-### How does the robot work?
+### How does the robot work? <a name="HowWork"></a>
 Thanks to ESP32 capacitive touch GPIOs we can pull a wire to e.g. a screw/coin that is able to sense touches instead of using mechanical buttons.
 We have the following buttons that tells the robot the following
 
@@ -32,17 +42,17 @@ We have the following buttons that tells the robot the following
     - If you like to have the robot connect to your wifi and enable [webrepl](https://docs.micropython.org/en/latest/esp8266/tutorial/repl.html) that allows you to e.g. interactively control the robot and upload/download files.
       
 
-### The final result
+### The final result <a name="FinalResult"></a>
 
 <a href="https://www.youtube.com/watch?v=Bjfdz-HMM34&cc_lang_pref=en"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/play.png" width="500"></a>
 
 You can check out this video to see what the result might look like..
 
 
-### Make your own robot
+### Make your own robot <a name="MakeYourOwn"></a>
 
 
-#### Material list
+#### Material list <a name="MaterialList"></a>
 
 | ﻿Item                    	| appr. Cost (EUR) 	| URL to item                                        	|
 |-------------------------	|------------------	|----------------------------------------------------	|
@@ -61,14 +71,14 @@ You can check out this video to see what the result might look like..
 |                         	|                  	|                                                    	|
 | Total cost              	| 9                	|                                                    	|
 
-#### How to wire the components
+#### How to wire the components <a name="HowToWire"></a>
 
 <a href="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png"><img src="https://github.com/engdan77/diy_robot/raw/master/docs/robot_sketch.png" width="600"></a>
 
 You have the sketch and wiring found under the docs directory..
 
 
-#### How to configure and upload the software
+#### How to configure and upload the software <a name="HowToUpload"></a>
 
 - Follow [these](https://docs.micropython.org/en/latest/esp32/tutorial/intro.html) instructions to upload MicroPython to your ESP32
 
@@ -89,7 +99,7 @@ WEATHERLOCATION = 'lat=57.8813&lon=13.784'
     - main.py
 
 
-#### Upload voice prompts
+#### Upload voice prompts <a name="UploadPrompts"></a>
 
 Connect the jq6500 module to available USB and it will open a "downloader" (on Windows) and you can then
 upload all prompts found in the "voice_prompts" folder, I'd suggest you come up with your own voice prompts unless you'd like to keep these swedish ones and you'd pretty much find what being said in the code
@@ -105,4 +115,7 @@ MyVoices = namedtuple('MyVoices', 'welcome '
 ```
 More details and hints could be found [here](https://sparks.gogo.co.nz/jq6500/index.html).
 
+#### So what's next ... <a name="WhatNext"></a>
 
+Well .. obviously a few minutes after introducing this to her she says "Dad ... when will it have arms and legs being able to clean my room ?!?!"
+So turns out we have some work ahead of us, already begin thinking of hydraulics and how to embed this to its GPIOs :sweat_smile:
